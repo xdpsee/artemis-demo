@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 @RestController
-public class TestController {
+public class TestingController {
 
     @Autowired
     private CommandExecutor executor;
