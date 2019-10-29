@@ -14,7 +14,7 @@ public class CoordinatorManager {
 
     private static final Logger logger = LoggerFactory.getLogger(CoordinatorManager.class);
 
-    private Cache<String, CommandCoordinator> coordinators = CacheBuilder.newBuilder()
+    private Cache<Command, CommandCoordinator> coordinators = CacheBuilder.newBuilder()
             .concurrencyLevel(16)
             .expireAfterWrite(15, TimeUnit.MINUTES)
             .initialCapacity(1024)
@@ -22,13 +22,13 @@ public class CoordinatorManager {
 
     public void await(Command command, long timeout) throws InterruptedException, TimeoutException {
 
-        CommandCoordinator coordinator = new CommandCoordinator(command);
-        coordinators.put(command.getUuid(), coordinator);
+        CommandCoordinator coordinator = new CommandCoordinator();
+        coordinators.put(command, coordinator);
 
         logger.info("execute command, waiting");
         coordinator.waitComplete(timeout);
-        coordinators.invalidate(command.getUuid());
-
+        coordinators.invalidate(command);
+        
         if (coordinator.signaled()) {
             logger.info("execute command, complete");
         } else {
@@ -38,7 +38,7 @@ public class CoordinatorManager {
     }
 
     public void signal(Command command) {
-        CommandCoordinator coordinator = coordinators.getIfPresent(command.getUuid());
+        CommandCoordinator coordinator = coordinators.getIfPresent(command);
         if (coordinator != null) {
             logger.info("execute command, signal");
             coordinator.signalComplete();

@@ -1,8 +1,6 @@
 package com.zhenhui.demo.artemis;
 
 import org.apache.activemq.artemis.utils.RandomUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.annotation.JmsListener;
@@ -16,8 +14,6 @@ import java.util.concurrent.TimeoutException;
 @Component
 public class CommandExecutor implements MessageListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandExecutor.class);
-
     public static final String DESTINATION = "DLQ";
 
     @Autowired
@@ -25,7 +21,7 @@ public class CommandExecutor implements MessageListener {
 
     @Autowired
     private CoordinatorManager coordinatorManager;
-
+    
     // 执行并等待
     public void execute(Command command, long timeout) throws InterruptedException, JmsException, TimeoutException {
 

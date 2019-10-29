@@ -1,13 +1,6 @@
 package com.zhenhui.demo.artemis;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class CommandCoordinator {
-
-    @NonNull
-    private Command command;
 
     private volatile boolean signaled;
 
